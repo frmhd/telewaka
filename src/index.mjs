@@ -14,7 +14,7 @@ bot.on('message', ({ chat, text }) => {
 
   const isStartCommand = equals(text, '/start');
   const onStart = () => {
-    bot.sendMessage(chatId, 'GIvE me yOur WaKatIme ApI KEy');
+    bot.sendMessage(chatId, 'YO');
     bot.sendMessage(chatId, 'take it here https://wakatime.com/settings/api-key');
     bot.on('message', async (msg) => {
       const wakaApiKey = Buffer.from(msg.text).toString('base64');
@@ -22,13 +22,15 @@ bot.on('message', ({ chat, text }) => {
 
       const { data: testDataFromWaka } = await wakaFetch.get('users/current/projects');
       const askKeyForJira = () => bot.sendMessage(chatId, 'GIvE me your JIRA login and password');
-      const sayBullshit = () => bot.sendMessage(chatId, 'that bullshit api key');
+      const sayBullshit = () => {
+        bot.sendMessage(chatId, 'that bullshit api key');
+        return onStart();
+      };
 
       ifElse(identity, askKeyForJira, sayBullshit)(testDataFromWaka);
-
-      // bot.sendMessage(chatId, `${testDataFromWaka}`);
     });
   };
 
-  ifElse(identity, onStart, always(undefined))(isStartCommand);
+  // WTF
+  ifElse(identity, onStart, always(null))(isStartCommand);
 });
